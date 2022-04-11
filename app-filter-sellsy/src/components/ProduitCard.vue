@@ -26,8 +26,6 @@
         </div>
         <h6>{{ produit.prix }}</h6>
       </div>
-
-      <div></div>
       <div>
         <span v-for="(group, index) in produit.stack" :key="index" class="badge">{{
           group
