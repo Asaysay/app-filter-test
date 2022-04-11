@@ -1,13 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import FilterPage from '../components/FilterPage.vue'
+import HelloWorld from '@/components/HelloWorld'
+
 Vue.use(Router)
+
 export default new Router({
   routes: [
     {
       path: '/',
-      name: 'FilterPage',
-      component: FilterPage
+      name: 'HelloWorld',
+      component: HelloWorld
     }
   ]
 })
