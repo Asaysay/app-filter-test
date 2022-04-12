@@ -25,6 +25,26 @@
           </div>
         </div>
       </div>
+      <div id="couleurCheckboxes">
+        <h6>Couleur</h6>
+        <div
+          v-for="(couleur, index) in filters"
+          :key="index"
+          class="form-check"
+        >
+          <div v-if="couleur.categorie == 'couleur'">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              v-model="couleur.checked"
+              v-on:change="getFilteredData()"
+            />
+            <label class="form-check-label">
+              {{ couleur.name }}
+            </label>
+          </div>
+        </div>
+      </div>
       <div id="sportCheckboxes">
         <h6>Sport</h6>
         <div v-for="(sport, index) in filters" :key="index" class="form-check">
@@ -66,7 +86,10 @@ export default {
       let selectedFilters = [];
       let checkedFilters = this.filters.filter((obj) => obj.checked);
       checkedFilters.forEach((element) => {
-        selectedFilters.push(element.value);
+        selectedFilters.push({
+          value: element.value,
+          categorie: element.categorie,
+        });
       });
       return selectedFilters;
     },
@@ -111,13 +134,133 @@ export default {
           name: "Running",
           value: "Running",
         },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Pourpre",
+          value: "pourpre",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Noir",
+          value: "noir",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Rouge",
+          value: "rouge",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Orange",
+          value: "orange",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Bleu",
+          value: "bleu",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Blanc",
+          value: "blanc",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Marron",
+          value: "marron",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Vert",
+          value: "vert",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Jaune",
+          value: "jaune",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Multicolore",
+          value: "multicolore",
+        },
+        {
+          checked: false,
+          categorie: "couleur",
+          name: "Gris",
+          value: "gris",
+        },
       ],
     };
   },
   methods: {
     getFilteredData() {
       this.filteredData = data;
-    }
+      if (this.selectedFilters.length > 0) {
+        let selectedSexFilters = [];
+        let selectedCouleurFilters = [];
+        let selectedSportFilters = [];
+
+        this.selectedFilters.forEach((filter) => {
+          switch (filter.categorie) {
+            case "sexe":
+              selectedSexFilters.push(filter.value);
+              break;
+            case "sport":
+              selectedSportFilters.push(filter.value);
+              break;
+            case "couleur":
+              selectedCouleurFilters.push(filter.value);
+              break;
+          }
+        });
+
+        const filters = {
+          sexe: selectedSexFilters,
+          sport: selectedSportFilters,
+          couleur: selectedCouleurFilters,
+        };
+
+        console.log(filters);
+
+        const filterKeys = Object.keys(filters);
+        const validData = this.filteredData.filter((produit) => {
+          return filterKeys.every((categorieKey) => {
+            if (filters[categorieKey].length == 0) {
+              console.log("filter", filters[categorieKey]);
+              return true;
+            }
+
+            // Pour l'objet couleur
+            if (categorieKey == "couleur" && produit[categorieKey]) {
+               produit[categorieKey] = produit[categorieKey].toString()
+               produit[categorieKey] = produit[categorieKey].split(', '); // corriger erreur "this.produit.couleur.split is not a function" produit par le dernier objet Observer
+               produit[categorieKey].forEach(couleur => couleur.toLowerCase());
+               console.log(produit[categorieKey]);
+                return produit[categorieKey].some((couleur) =>
+                  filters[categorieKey].includes(couleur)
+                );              
+            }
+
+            return filters[categorieKey].find(
+              (filter) => filter === produit[categorieKey]
+            );
+          });
+        });
+
+        this.filteredData = validData;
+      }
+    },
   },
   mounted() {
     this.getFilteredData();
