@@ -25,6 +25,22 @@
           </div>
         </div>
       </div>
+      <div id="prixCheckboxes">
+        <h6>Prix</h6>
+        <div v-for="(prix, index) in filters" :key="index" class="form-check">
+          <div v-if="prix.categorie == 'prix'">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              v-model="prix.checked"
+              v-on:change="getFilteredData()"
+            />
+            <label class="form-check-label">
+              {{ prix.name }}
+            </label>
+          </div>
+        </div>
+      </div>
       <div id="couleurCheckboxes">
         <h6>Couleur</h6>
         <div
@@ -98,6 +114,7 @@ export default {
     return {
       filteredData: [],
       filters: [
+        //   sexe
         {
           checked: false,
           categorie: "sexe",
@@ -116,6 +133,7 @@ export default {
           name: "Mixte",
           value: "Mixte",
         },
+        // sport
         {
           checked: false,
           categorie: "sport",
@@ -134,6 +152,32 @@ export default {
           name: "Running",
           value: "Running",
         },
+        // prix
+        {
+          checked: false,
+          categorie: "prix",
+          name: "Moins €50",
+          value: "0-49,99",
+        },
+        {
+          checked: false,
+          categorie: "prix",
+          name: "€50 - €100",
+          value: "50-100",
+        },
+        {
+          checked: false,
+          categorie: "prix",
+          name: "€100 - €150",
+          value: "100,01-150",
+        },
+        {
+          checked: false,
+          categorie: "prix",
+          name: "Plus de €150",
+          value: "150,01-1000", // à revoir pour le max
+        },
+        // couleur
         {
           checked: false,
           categorie: "couleur",
@@ -208,6 +252,7 @@ export default {
       this.filteredData = data;
       if (this.selectedFilters.length > 0) {
         let selectedSexFilters = [];
+        let selectedPrixFilters = [];
         let selectedCouleurFilters = [];
         let selectedSportFilters = [];
 
@@ -216,19 +261,35 @@ export default {
             case "sexe":
               selectedSexFilters.push(filter.value);
               break;
-            case "sport":
-              selectedSportFilters.push(filter.value);
+            case "prix":
+              switch (filter.value) {
+                case "0-49,99":
+                  selectedPrixFilters.push(0, 49.99);
+                  break;
+                case "50-100":
+                  selectedPrixFilters.push(50, 100);
+                  break;
+                case "100,01-150":
+                  selectedPrixFilters.push(100.01, 150);
+                  break;
+                case "150,01-1000":
+                  selectedPrixFilters.push(150.01, 1000); // à revoir pour le max
+                  break;
+              }
               break;
             case "couleur":
               selectedCouleurFilters.push(filter.value);
               break;
+            case "sport":
+              selectedSportFilters.push(filter.value);
+              break;
           }
         });
-
         const filters = {
           sexe: selectedSexFilters,
-          sport: selectedSportFilters,
+          prix: selectedPrixFilters,
           couleur: selectedCouleurFilters,
+          sport: selectedSportFilters,
         };
 
         console.log(filters);
@@ -236,25 +297,46 @@ export default {
         const filterKeys = Object.keys(filters);
         const validData = this.filteredData.filter((produit) => {
           return filterKeys.every((categorieKey) => {
+
+            // pour les catégories où aucune checkbox selected
             if (filters[categorieKey].length == 0) {
-              console.log("filter", filters[categorieKey]);
               return true;
             }
 
-            // Pour l'objet couleur
-            if (categorieKey == "couleur") {
-              let produitCategorieKey = produit[categorieKey].toString().toLowerCase();
-               console.log(typeof produitCategorieKey)
-               if(typeof produitCategorieKey === 'string'){
-                    produitCategorieKey = produitCategorieKey.split(', ');
-               }              
-               produitCategorieKey.forEach(couleur => couleur.toLowerCase());
-               console.log(produitCategorieKey);
-                return produitCategorieKey.some((couleur) =>
-                  filters[categorieKey].includes(couleur)
-                );              
+            // Pour les prix
+            // à revoir => version permettant de filtrer selon un min et un max mais, n'exclue pas les entres deux
+            // ex => si 50-100 et Plus de 150 sélectionnés afficher a tous les produits entre 50.01 et 1000 euros mais n'exclue pas les produits allant de 100 à 150 euros
+            if (categorieKey == "prix") {
+                filters[categorieKey] = filters[categorieKey].sort((a, b) => a-b);
+                let prix = filters[categorieKey];
+                let min = Math.min(...prix);
+                let max = Math.max(...prix);
+                let prixProduit = parseFloat(produit[categorieKey]);
+                
+                if(( prixProduit > min) && ( prixProduit< max)){
+                    console.log(produit)
+                    return true;
+                }
             }
 
+           
+            // Pour les couleurs
+            if (categorieKey == "couleur") {
+              let produitCategorieKeyValue = produit[categorieKey]
+                .toString()
+                .toLowerCase();
+              if (typeof produitCategorieKeyValue === "string") {
+                produitCategorieKeyValue = produitCategorieKeyValue.split(", ");
+              }
+              produitCategorieKeyValue.forEach((couleur) =>
+                couleur.toLowerCase()
+              );
+              return produitCategorieKeyValue.some((couleur) =>
+                filters[categorieKey].includes(couleur)
+              );
+            }
+
+            // Pour les filtres simples ( ex sexe )
             return filters[categorieKey].find(
               (filter) => filter === produit[categorieKey]
             );
