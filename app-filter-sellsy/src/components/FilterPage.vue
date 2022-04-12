@@ -242,12 +242,15 @@ export default {
             }
 
             // Pour l'objet couleur
-            if (categorieKey == "couleur" && produit[categorieKey]) {
-               produit[categorieKey] = produit[categorieKey].toString()
-               produit[categorieKey] = produit[categorieKey].split(', '); // corriger erreur "this.produit.couleur.split is not a function" produit par le dernier objet Observer
-               produit[categorieKey].forEach(couleur => couleur.toLowerCase());
-               console.log(produit[categorieKey]);
-                return produit[categorieKey].some((couleur) =>
+            if (categorieKey == "couleur") {
+              let produitCategorieKey = produit[categorieKey].toString().toLowerCase();
+               console.log(typeof produitCategorieKey)
+               if(typeof produitCategorieKey === 'string'){
+                    produitCategorieKey = produitCategorieKey.split(', ');
+               }              
+               produitCategorieKey.forEach(couleur => couleur.toLowerCase());
+               console.log(produitCategorieKey);
+                return produitCategorieKey.some((couleur) =>
                   filters[categorieKey].includes(couleur)
                 );              
             }
