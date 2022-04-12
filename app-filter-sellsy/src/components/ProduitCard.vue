@@ -9,9 +9,9 @@
           :alt="produit.photo"
           sizes="(max-width: 959px) 318px, (max-width: 959px) and (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) 592px, (min-width: 960px) 592px"
         />
-      </div>
+    </div>
       <div>
-        <h5 class="card-title">{{ produit.article }}</h5>
+        <h6 class="card-title">{{ produit.article }}</h6>
         <h6>
           Chaussure de {{ produit.sport }}
           <span v-if="produit.sexe !== 'Mixte'">pour {{ produit.sexe }}</span>
@@ -32,7 +32,7 @@
         }}</span>
       </div>
     </div>
-  </div>
+  </div> 
 </template>
 <script>
 export default {

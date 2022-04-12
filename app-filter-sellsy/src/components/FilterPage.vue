@@ -8,7 +8,7 @@
       </h3>
     </div>
     <!-- filter -->
-    <div class="col-2">
+    <div class="col-3">
       <div id="sexCheckboxes">
         <h6>Sexe</h6>
         <div v-for="(sex, index) in filters" :key="index" class="form-check">
@@ -54,7 +54,7 @@
               type="checkbox"
               v-model="couleur.checked"
               v-on:change="getFilteredData()"
-            />
+            />            
             <label class="form-check-label">
               {{ couleur.name }}
             </label>
@@ -79,7 +79,7 @@
       </div>
     </div>
     <!-- produits -->
-    <div class="col-9 card-columns">
+    <div class="col-8 card-columns">
       <produit-card
         v-for="(produit, index) in filteredData"
         :key="index"
@@ -119,131 +119,131 @@ export default {
           checked: false,
           categorie: "sexe",
           name: "Hommes",
-          value: "Homme",
+          value: "Homme"
         },
         {
           checked: false,
           categorie: "sexe",
           name: "Femmes",
-          value: "Femme",
+          value: "Femme"
         },
         {
           checked: false,
           categorie: "sexe",
           name: "Mixte",
-          value: "Mixte",
+          value: "Mixte"
         },
         // sport
         {
           checked: false,
           categorie: "sport",
           name: "Football",
-          value: "Football",
+          value: "Football"
         },
         {
           checked: false,
           categorie: "sport",
           name: "Basket",
-          value: "Basket",
+          value: "Basket"
         },
         {
           checked: false,
           categorie: "sport",
           name: "Running",
-          value: "Running",
+          value: "Running"
         },
         // prix
         {
           checked: false,
           categorie: "prix",
           name: "Moins €50",
-          value: "0-49,99",
+          value: "0-49,99"
         },
         {
           checked: false,
           categorie: "prix",
           name: "€50 - €100",
-          value: "50-100",
+          value: "50-100"
         },
         {
           checked: false,
           categorie: "prix",
           name: "€100 - €150",
-          value: "100,01-150",
+          value: "100,01-150"
         },
         {
           checked: false,
           categorie: "prix",
           name: "Plus de €150",
-          value: "150,01-1000", // à revoir pour le max
+          value: "150,01-1000", // à revoir pour le ma
         },
         // couleur
         {
           checked: false,
           categorie: "couleur",
           name: "Pourpre",
-          value: "pourpre",
+          value: "pourpre"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Noir",
-          value: "noir",
+          value: "noir"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Rouge",
-          value: "rouge",
+          value: "rouge"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Orange",
-          value: "orange",
+          value: "orange"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Bleu",
-          value: "bleu",
+          value: "bleu"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Blanc",
-          value: "blanc",
+          value: "blanc"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Marron",
-          value: "marron",
+          value: "marron"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Vert",
-          value: "vert",
+          value: "vert"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Jaune",
-          value: "jaune",
+          value: "jaune"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Multicolore",
-          value: "multicolore",
+          value: "multicolore"
         },
         {
           checked: false,
           categorie: "couleur",
           name: "Gris",
-          value: "gris",
-        },
+          value: "gris"
+        }
       ],
     };
   },
